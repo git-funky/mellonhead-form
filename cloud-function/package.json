@@ -1,0 +1,12 @@
+{
+  "name": "mellonhead-contact-form",
+  "version": "1.0.0",
+  "description": "Google Cloud Function — contact form handler writing to Notion",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  }
+}
