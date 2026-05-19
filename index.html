@@ -4,12 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact Us</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
   <style>
+    /* ── Colour tokens ───────────────────────────────────────── */
+    :root {
+      --primary:   #f46665;   /* page background */
+      --dark:      #1e3a5f;   /* card background, dark text */
+      --light:     #fdf5e6;   /* card text, input background */
+      --accent:    #ffc512;   /* button, focus ring */
+      --accent-hover: #e6b010;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f5;
+      font-family: 'PT Sans', sans-serif;
+      background: var(--primary);
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -18,24 +30,25 @@
     }
 
     .form-card {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      background: var(--dark);
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
       padding: 2rem;
       width: 100%;
       max-width: 520px;
     }
 
     h1 {
-      font-size: 1.4rem;
-      font-weight: 600;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
       margin-bottom: 0.25rem;
-      color: #111;
+      color: var(--light);
     }
 
     .subtitle {
       font-size: 0.9rem;
-      color: #666;
+      color: rgba(253, 245, 230, 0.7);
       margin-bottom: 1.75rem;
     }
 
@@ -45,15 +58,16 @@
 
     label {
       display: block;
+      font-family: 'Nunito', sans-serif;
       font-size: 0.875rem;
-      font-weight: 500;
-      color: #333;
+      font-weight: 600;
+      color: var(--light);
       margin-bottom: 0.375rem;
     }
 
     label .optional {
       font-weight: 400;
-      color: #999;
+      color: rgba(253, 245, 230, 0.55);
       font-size: 0.8rem;
       margin-left: 4px;
     }
@@ -61,22 +75,28 @@
     input, select, textarea {
       width: 100%;
       padding: 0.6rem 0.75rem;
-      border: 1px solid #d1d5db;
+      border: 1px solid rgba(253, 245, 230, 0.25);
       border-radius: 6px;
+      font-family: 'PT Sans', sans-serif;
       font-size: 0.95rem;
-      color: #111;
-      background: #fff;
-      transition: border-color 0.15s;
+      color: var(--dark);
+      background: var(--light);
+      transition: border-color 0.15s, box-shadow 0.15s;
       outline: none;
     }
 
+    input::placeholder, textarea::placeholder {
+      color: rgba(30, 58, 95, 0.45);
+    }
+
     input:focus, select:focus, textarea:focus {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 197, 18, 0.3);
     }
 
     input.error, select.error, textarea.error {
-      border-color: #dc2626;
+      border-color: #f87171;
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
     }
 
     textarea {
@@ -87,7 +107,7 @@
     .error-msg {
       display: none;
       font-size: 0.8rem;
-      color: #dc2626;
+      color: #fca5a5;
       margin-top: 0.3rem;
     }
 
@@ -108,20 +128,21 @@
 
     .submit-btn {
       width: 100%;
-      padding: 0.7rem;
-      background: #4f46e5;
-      color: #fff;
+      padding: 0.75rem;
+      background: var(--accent);
+      color: var(--dark);
       border: none;
       border-radius: 6px;
+      font-family: 'Nunito', sans-serif;
       font-size: 1rem;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
       transition: background 0.15s;
       margin-top: 0.5rem;
     }
 
-    .submit-btn:hover { background: #4338ca; }
-    .submit-btn:disabled { background: #a5b4fc; cursor: not-allowed; }
+    .submit-btn:hover { background: var(--accent-hover); }
+    .submit-btn:disabled { background: rgba(255, 197, 18, 0.4); cursor: not-allowed; }
 
     .alert {
       display: none;
@@ -132,21 +153,36 @@
     }
 
     .alert.success {
-      background: #f0fdf4;
-      border: 1px solid #86efac;
-      color: #166534;
+      background: rgba(253, 245, 230, 0.12);
+      border: 1px solid rgba(255, 197, 18, 0.6);
+      color: var(--accent);
     }
 
     .alert.failure {
-      background: #fef2f2;
-      border: 1px solid #fca5a5;
-      color: #991b1b;
+      background: rgba(244, 102, 101, 0.15);
+      border: 1px solid rgba(248, 113, 113, 0.5);
+      color: #fca5a5;
     }
 
     .alert.visible { display: block; }
+
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo-wrap img {
+      max-width: 200px;
+      width: 100%;
+      height: auto;
+    }
   </style>
 </head>
 <body>
+  <div>
+    <div class="logo-wrap">
+      <img src="images/mellonhead-logo-coral.png" alt="Mellonhead" />
+    </div>
   <div class="form-card">
     <h1>Get in touch</h1>
     <p class="subtitle">Fill out the form below and we'll get back to you shortly.</p>
@@ -210,6 +246,7 @@
         Something went wrong. Please try again in a moment.
       </div>
     </form>
+  </div>
   </div>
 
   <script>
