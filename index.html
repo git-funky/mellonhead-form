@@ -10,11 +10,11 @@
   <style>
     /* ── Colour tokens ───────────────────────────────────────── */
     :root {
-      --primary:      #f46665;  /* buttons */
+      --primary:      #f46665;
       --primary-hover:#e05555;
-      --dark:         #1e3a5f;  /* card background, dark text */
-      --light:        #fdf5e6;  /* page background, card text, input background */
-      --accent:       #ffc512;  /* focus rings, success messages */
+      --dark:         #1e3a5f;
+      --light:        #fdf5e6;
+      --accent:       #ffc512;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,7 +35,7 @@
       box-shadow: 0 4px 24px rgba(0,0,0,0.25);
       padding: 2rem;
       width: 100%;
-      max-width: 520px;
+      max-width: 560px;
     }
 
     h1 {
@@ -115,6 +115,46 @@
       display: block;
     }
 
+    /* ── Multi-select checkboxes ─────────────────────────────── */
+    .multi-select-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .multi-select-group label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-family: 'PT Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--light);
+      cursor: pointer;
+      margin-bottom: 0;
+    }
+
+    .multi-select-group input[type="checkbox"] {
+      width: auto;
+      min-width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      background: var(--light);
+      border: none;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .multi-select-group input[type="checkbox"]:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
     /* Honeypot — hidden from real users */
     .hp-field {
       position: absolute;
@@ -176,6 +216,12 @@
       width: 100%;
       height: auto;
     }
+
+    .field-divider {
+      border: none;
+      border-top: 1px solid rgba(253, 245, 230, 0.15);
+      margin: 1.5rem 0;
+    }
   </style>
 </head>
 <body>
@@ -183,74 +229,127 @@
     <div class="logo-wrap">
       <img src="images/mellonhead-logo-coral.png" alt="Mellonhead" />
     </div>
-  <div class="form-card">
-    <h1>Get in touch</h1>
-    <p class="subtitle">Fill out the form below and we'll get back to you shortly.</p>
+    <div class="form-card">
+      <h1>Let's talk</h1>
+      <p class="subtitle">Tell us a bit about your situation. Based on what you share, we'll either book a fit call or send you the Lab catalog to keep in your back pocket.</p>
 
-    <form id="contactForm" novalidate>
+      <form id="contactForm" novalidate>
 
-      <!-- Honeypot — must stay empty -->
-      <div class="hp-field" aria-hidden="true">
-        <label for="_hp">Leave this blank</label>
-        <input type="text" id="_hp" name="_honeypot" tabindex="-1" autocomplete="off" />
-      </div>
+        <!-- Honeypot — must stay empty -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="_hp">Leave this blank</label>
+          <input type="text" id="_hp" name="_honeypot" tabindex="-1" autocomplete="off" />
+        </div>
 
-      <div class="field">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" maxlength="100" autocomplete="name" />
-        <span class="error-msg" id="name-error">Please enter your name.</span>
-      </div>
+        <!-- Hidden fields -->
+        <input type="hidden" id="source" name="source" value="ATD 2026" />
+        <input type="hidden" id="formPath" name="formPath" value="catalog-request" />
 
-      <div class="field">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" autocomplete="email" />
-        <span class="error-msg" id="email-error">Please enter a valid email address.</span>
-      </div>
+        <!-- 1. Full name -->
+        <div class="field">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" maxlength="100" autocomplete="name" />
+          <span class="error-msg" id="name-error">Please enter your name.</span>
+        </div>
 
-      <div class="field">
-        <label for="phone">Phone <span class="optional">(optional)</span></label>
-        <input type="tel" id="phone" name="phone" placeholder="(555) 867-5309" autocomplete="tel" />
-        <span class="error-msg" id="phone-error">Please enter a valid US phone number.</span>
-      </div>
+        <!-- 2. Work email -->
+        <div class="field">
+          <label for="email">Work email</label>
+          <input type="email" id="email" name="email" autocomplete="email" />
+          <span class="error-msg" id="email-error">Please enter a valid email address.</span>
+        </div>
 
-      <div class="field">
-        <label for="companyName">Company Name <span class="optional">(optional)</span></label>
-        <input type="text" id="companyName" name="companyName" maxlength="200" autocomplete="organization" />
-        <span class="error-msg" id="companyName-error">Company name must be 200 characters or less.</span>
-      </div>
+        <!-- 3. Organization -->
+        <div class="field">
+          <label for="organization">Organization</label>
+          <input type="text" id="organization" name="organization" maxlength="200" autocomplete="organization" />
+          <span class="error-msg" id="organization-error">Please enter your organization.</span>
+        </div>
 
-      <div class="field">
-        <label for="companySize">Company Size <span class="optional">(optional)</span></label>
-        <select id="companySize" name="companySize">
-          <option value="">Select size...</option>
-          <option value="Just me / Freelancer">Just me / Freelancer</option>
-          <option value="Less than 100">Less than 100</option>
-          <option value="100 – 1000">100 – 1000</option>
-          <option value="Greater than 1000">Greater than 1000</option>
-        </select>
-        <span class="error-msg" id="companySize-error">Please select a valid option.</span>
-      </div>
+        <!-- 4. Role / title -->
+        <div class="field">
+          <label for="role">Role / title</label>
+          <input type="text" id="role" name="role" maxlength="100" autocomplete="organization-title" />
+          <span class="error-msg" id="role-error">Please enter your role or title.</span>
+        </div>
 
-      <div class="field">
-        <label for="message">Message <span class="optional">(optional)</span></label>
-        <textarea id="message" name="message" placeholder="Tell us how we can help..."></textarea>
-        <span class="error-msg" id="message-error"></span>
-      </div>
+        <!-- 5. Budget -->
+        <div class="field">
+          <label for="budget">Approximate budget for AI capability work</label>
+          <select id="budget" name="budget">
+            <option value="">Select a range...</option>
+            <option value="Under $25k">Under $25k</option>
+            <option value="$25-50k">$25&ndash;50k</option>
+            <option value="$50-100k">$50&ndash;100k</option>
+            <option value="$100k+">$100k+</option>
+          </select>
+          <span class="error-msg" id="budget-error">Please select a budget range.</span>
+        </div>
 
-      <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+        <hr class="field-divider" />
 
-      <div class="alert success" id="successMsg" role="alert">
-        Thanks for reaching out! We'll be in touch soon.
-      </div>
-      <div class="alert failure" id="errorMsg" role="alert">
-        Something went wrong. Please try again in a moment.
-      </div>
-    </form>
-  </div>
+        <!-- 6. Primary goals (multi-select) -->
+        <div class="field">
+          <label>What are you trying to do? <span class="optional">(optional — select all that apply)</span></label>
+          <div class="multi-select-group" id="goals-group">
+            <label><input type="checkbox" name="goals" value="Get leadership conversant in AI" /> Get leadership conversant in AI</label>
+            <label><input type="checkbox" name="goals" value="Help managers lead AI adoption in their teams" /> Help managers lead AI adoption in their teams</label>
+            <label><input type="checkbox" name="goals" value="Build a baseline of AI fluency across the organization" /> Build a baseline of AI fluency across the organization</label>
+            <label><input type="checkbox" name="goals" value="Develop internal builders or power users" /> Develop internal builders or power users</label>
+            <label><input type="checkbox" name="goals" value="Redesign specific workflows with AI" /> Redesign specific workflows with AI</label>
+            <label><input type="checkbox" name="goals" value="Figure out where to start" /> Figure out where to start</label>
+            <label><input type="checkbox" name="goals" value="Something else" /> Something else</label>
+          </div>
+        </div>
+
+        <!-- 7. AI tools (multi-select) -->
+        <div class="field">
+          <label>What AI tools are in use today? <span class="optional">(optional — select all that apply)</span></label>
+          <div class="multi-select-group" id="tools-group">
+            <label><input type="checkbox" name="tools" value="Microsoft 365 Copilot" /> Microsoft 365 Copilot</label>
+            <label><input type="checkbox" name="tools" value="Google Gemini or Workspace AI" /> Google Gemini or Workspace AI</label>
+            <label><input type="checkbox" name="tools" value="ChatGPT (Team or Enterprise)" /> ChatGPT (Team or Enterprise)</label>
+            <label><input type="checkbox" name="tools" value="Claude" /> Claude</label>
+            <label><input type="checkbox" name="tools" value="Other" /> Other</label>
+            <label><input type="checkbox" name="tools" value="Not yet deployed or evaluating" /> Not yet deployed or evaluating</label>
+          </div>
+        </div>
+
+        <!-- 8. Timeline -->
+        <div class="field">
+          <label for="timeline">When are you looking to start? <span class="optional">(optional)</span></label>
+          <select id="timeline" name="timeline">
+            <option value="">Select a timeframe...</option>
+            <option value="Now or next quarter">Now or next quarter</option>
+            <option value="3-6 months">3&ndash;6 months</option>
+            <option value="6-12 months">6&ndash;12 months</option>
+            <option value="Later or exploring">Later or exploring</option>
+            <option value="Unclear">Unclear</option>
+          </select>
+        </div>
+
+        <hr class="field-divider" />
+
+        <!-- 9. Specific context -->
+        <div class="field">
+          <label for="context">Anything specific you're working through? <span class="optional">(optional)</span></label>
+          <textarea id="context" name="context" placeholder="Tell us about the situation if you want to share." maxlength="2000"></textarea>
+          <span class="error-msg" id="context-error"></span>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+
+        <div class="alert success" id="successMsg" role="alert">
+          Thanks for reaching out! We'll be in touch soon.
+        </div>
+        <div class="alert failure" id="errorMsg" role="alert">
+          Something went wrong. Please try again in a moment.
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
-    // Replace with your deployed Cloud Function URL
     const FUNCTION_URL = 'https://us-central1-co-mellonhead.cloudfunctions.net/contactForm';
 
     const form = document.getElementById('contactForm');
@@ -258,32 +357,46 @@
     const successMsg = document.getElementById('successMsg');
     const errorMsg = document.getElementById('errorMsg');
 
-    const VALID_SIZES = [
-      'Just me / Freelancer',
-      'Less than 100',
-      '100 – 1,000',
-      'Greater than 1,000',
+    const VALID_BUDGETS = ['Under $25k', '$25-50k', '$50-100k', '$100k+'];
+    const VALID_TIMELINES = ['Now or next quarter', '3-6 months', '6-12 months', 'Later or exploring', 'Unclear'];
+    const VALID_GOALS = [
+      'Get leadership conversant in AI',
+      'Help managers lead AI adoption in their teams',
+      'Build a baseline of AI fluency across the organization',
+      'Develop internal builders or power users',
+      'Redesign specific workflows with AI',
+      'Figure out where to start',
+      'Something else',
+    ];
+    const VALID_TOOLS = [
+      'Microsoft 365 Copilot',
+      'Google Gemini or Workspace AI',
+      'ChatGPT (Team or Enterprise)',
+      'Claude',
+      'Other',
+      'Not yet deployed or evaluating',
     ];
 
     function isValidEmail(val) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
     }
 
-    function isValidUSPhone(val) {
-      const digits = val.replace(/\D/g, '');
-      return digits.length === 10 || digits.length === 11;
-    }
-
     function setError(fieldId, show) {
       const input = document.getElementById(fieldId);
       const err = document.getElementById(fieldId + '-error');
-      if (show) {
-        input.classList.add('error');
-        err.classList.add('visible');
-      } else {
-        input.classList.remove('error');
-        err.classList.remove('visible');
+      if (input) {
+        if (show) input.classList.add('error');
+        else input.classList.remove('error');
       }
+      if (err) {
+        if (show) err.classList.add('visible');
+        else err.classList.remove('visible');
+      }
+    }
+
+    function getCheckedValues(name) {
+      return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked'))
+        .map(cb => cb.value);
     }
 
     function validate() {
@@ -295,14 +408,14 @@
       const email = document.getElementById('email').value.trim();
       if (!email || !isValidEmail(email)) { setError('email', true); valid = false; } else { setError('email', false); }
 
-      const phone = document.getElementById('phone').value.trim();
-      if (phone && !isValidUSPhone(phone)) { setError('phone', true); valid = false; } else { setError('phone', false); }
+      const organization = document.getElementById('organization').value.trim();
+      if (!organization) { setError('organization', true); valid = false; } else { setError('organization', false); }
 
-      const companyName = document.getElementById('companyName').value.trim();
-      if (companyName.length > 200) { setError('companyName', true); valid = false; } else { setError('companyName', false); }
+      const role = document.getElementById('role').value.trim();
+      if (!role) { setError('role', true); valid = false; } else { setError('role', false); }
 
-      const companySize = document.getElementById('companySize').value;
-      if (companySize && !VALID_SIZES.includes(companySize)) { setError('companySize', true); valid = false; } else { setError('companySize', false); }
+      const budget = document.getElementById('budget').value;
+      if (!budget) { setError('budget', true); valid = false; } else { setError('budget', false); }
 
       return valid;
     }
@@ -319,13 +432,18 @@
       submitBtn.textContent = 'Sending...';
 
       const payload = {
-        name: document.getElementById('name').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        companyName: document.getElementById('companyName').value.trim(),
-        companySize: document.getElementById('companySize').value,
-        message: document.getElementById('message').value.trim(),
-        _honeypot: document.getElementById('_hp').value,
+        name:         document.getElementById('name').value.trim(),
+        email:        document.getElementById('email').value.trim(),
+        organization: document.getElementById('organization').value.trim(),
+        role:         document.getElementById('role').value.trim(),
+        budget:       document.getElementById('budget').value,
+        goals:        getCheckedValues('goals'),
+        tools:        getCheckedValues('tools'),
+        timeline:     document.getElementById('timeline').value,
+        context:      document.getElementById('context').value.trim(),
+        source:       document.getElementById('source').value,
+        formPath:     document.getElementById('formPath').value,
+        _honeypot:    document.getElementById('_hp').value,
       };
 
       try {

@@ -1,21 +1,45 @@
 /**
  * Mellonhead Contact Form — Google Cloud Function
  *
- * Environment variables (set in GCP Console or via --set-env-vars at deploy time):
- *   NOTION_TOKEN        — Notion personal access token
- *   NOTION_DATABASE_ID  — ID of the target Notion database
+ * Environment variables:
+ *   NOTION_TOKEN        — Notion integration token
+ *   NOTION_DATABASE_ID  — ID of the target Notion Leads database
  */
 
 const { Client } = require('@notionhq/client');
 
 const ALLOWED_ORIGIN = 'https://git-funky.github.io';
 
-const VALID_COMPANY_SIZES = [
-  'Just me / Freelancer',
-  'Less than 100',
-  '100 – 1000',
-  'Greater than 1000',
+const VALID_BUDGETS = ['Under $25k', '$25-50k', '$50-100k', '$100k+'];
+
+const VALID_TIMELINES = [
+  'Now or next quarter',
+  '3-6 months',
+  '6-12 months',
+  'Later or exploring',
+  'Unclear',
 ];
+
+const VALID_GOALS = [
+  'Get leadership conversant in AI',
+  'Help managers lead AI adoption in their teams',
+  'Build a baseline of AI fluency across the organization',
+  'Develop internal builders or power users',
+  'Redesign specific workflows with AI',
+  'Figure out where to start',
+  'Something else',
+];
+
+const VALID_TOOLS = [
+  'Microsoft 365 Copilot',
+  'Google Gemini or Workspace AI',
+  'ChatGPT (Team or Enterprise)',
+  'Claude',
+  'Other',
+  'Not yet deployed or evaluating',
+];
+
+const VALID_FORM_PATHS = ['booking-request', 'catalog-request'];
 
 // Initialise Notion client once (reused across warm invocations)
 let notionClient;
@@ -26,9 +50,6 @@ function getNotion() {
   return notionClient;
 }
 
-/**
- * Set CORS headers. Only the GitHub Pages origin is allowed.
- */
 function setCorsHeaders(req, res) {
   const origin = req.headers.origin || '';
   if (origin === ALLOWED_ORIGIN) {
@@ -41,11 +62,11 @@ function setCorsHeaders(req, res) {
 
 /**
  * Validate incoming form data.
- * Returns an object of field -> error message, or an empty object if valid.
+ * Returns an object of field -> error message, or empty object if valid.
  */
 function validate(body) {
   const errors = {};
-  const { name, email, phone, companyName, companySize } = body;
+  const { name, email, organization, role, budget, goals, tools, timeline } = body;
 
   if (!name || name.trim().length === 0) {
     errors.name = 'Name is required.';
@@ -59,19 +80,38 @@ function validate(body) {
     errors.email = 'Invalid email address.';
   }
 
-  if (phone && phone.trim().length > 0) {
-    const digits = phone.replace(/\D/g, '');
-    if (digits.length < 10 || digits.length > 11) {
-      errors.phone = 'Invalid US phone number.';
+  if (!organization || organization.trim().length === 0) {
+    errors.organization = 'Organization is required.';
+  } else if (organization.trim().length > 200) {
+    errors.organization = 'Organization must be 200 characters or less.';
+  }
+
+  if (!role || role.trim().length === 0) {
+    errors.role = 'Role / title is required.';
+  } else if (role.trim().length > 100) {
+    errors.role = 'Role must be 100 characters or less.';
+  }
+
+  if (!budget || !VALID_BUDGETS.includes(budget)) {
+    errors.budget = 'Please select a valid budget range.';
+  }
+
+  if (timeline && !VALID_TIMELINES.includes(timeline)) {
+    errors.timeline = 'Invalid timeline value.';
+  }
+
+  if (goals && Array.isArray(goals)) {
+    const invalid = goals.filter(g => !VALID_GOALS.includes(g));
+    if (invalid.length > 0) {
+      errors.goals = 'Invalid goal value(s).';
     }
   }
 
-  if (companyName && companyName.trim().length > 200) {
-    errors.companyName = 'Company name must be 200 characters or less.';
-  }
-
-  if (companySize && !VALID_COMPANY_SIZES.includes(companySize)) {
-    errors.companySize = 'Invalid company size value.';
+  if (tools && Array.isArray(tools)) {
+    const invalid = tools.filter(t => !VALID_TOOLS.includes(t));
+    if (invalid.length > 0) {
+      errors.tools = 'Invalid tool value(s).';
+    }
   }
 
   return errors;
@@ -81,7 +121,7 @@ function validate(body) {
  * Build the Notion page properties object from the validated form data.
  */
 function buildNotionProperties(body) {
-  const { name, email, phone, companyName, companySize, message } = body;
+  const { name, email, organization, role, budget, goals, tools, timeline, context, formPath } = body;
 
   const properties = {
     Name: {
@@ -90,31 +130,54 @@ function buildNotionProperties(body) {
     Email: {
       email: email.trim(),
     },
+    Organization: {
+      rich_text: [{ text: { content: organization.trim() } }],
+    },
+    'Role / Title': {
+      rich_text: [{ text: { content: role.trim() } }],
+    },
+    'Budget Range': {
+      select: { name: budget },
+    },
+    Source: {
+      rich_text: [{ text: { content: 'ATD 2026' } }],
+    },
+    Status: {
+      select: { name: 'New' },
+    },
     'Submitted At': {
       date: { start: new Date().toISOString() },
     },
   };
 
-  if (phone && phone.trim()) {
-    properties.Phone = { phone_number: phone.trim() };
+  // Form path (booking-request or catalog-request)
+  if (formPath && VALID_FORM_PATHS.includes(formPath)) {
+    properties['Form Path'] = { select: { name: formPath } };
   }
 
-  if (companyName && companyName.trim()) {
-    properties['Company Name'] = {
-      rich_text: [{ text: { content: companyName.trim() } }],
+  // Multi-select: Primary Goals
+  if (goals && Array.isArray(goals) && goals.length > 0) {
+    properties['Primary Goals'] = {
+      multi_select: goals.map(g => ({ name: g })),
     };
   }
 
-  if (companySize) {
-    properties['Company Size'] = {
-      select: { name: companySize },
+  // Multi-select: AI Tools in Use
+  if (tools && Array.isArray(tools) && tools.length > 0) {
+    properties['AI Tools in Use'] = {
+      multi_select: tools.map(t => ({ name: t })),
     };
   }
 
-  if (message && message.trim()) {
-    // Notion rich_text has a 2000-character limit per block
-    properties.Message = {
-      rich_text: [{ text: { content: message.trim().substring(0, 2000) } }],
+  // Optional select: Timeline
+  if (timeline && VALID_TIMELINES.includes(timeline)) {
+    properties['Timeline'] = { select: { name: timeline } };
+  }
+
+  // Optional textarea: Specific Question or Context (2000-char Notion limit)
+  if (context && context.trim()) {
+    properties['Specific Question or Context'] = {
+      rich_text: [{ text: { content: context.trim().substring(0, 2000) } }],
     };
   }
 
@@ -127,7 +190,6 @@ function buildNotionProperties(body) {
 exports.contactForm = async (req, res) => {
   setCorsHeaders(req, res);
 
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     res.status(204).send('');
     return;
@@ -140,9 +202,8 @@ exports.contactForm = async (req, res) => {
 
   const body = req.body || {};
 
-  // Honeypot check — bots fill hidden fields, humans don't
+  // Honeypot check
   if (body._honeypot) {
-    // Return 200 so bots think they succeeded
     res.status(200).json({ success: true });
     return;
   }
