@@ -8,7 +8,10 @@
 
 const { Client } = require('@notionhq/client');
 
-const ALLOWED_ORIGIN = 'https://git-funky.github.io';
+const ALLOWED_ORIGINS = [
+  'https://git-funky.github.io',  // GitHub Pages (keep for testing)
+  'https://learn.mellonhead.co',  // Production custom domain
+];
 
 const VALID_BUDGETS = ['Under $25k', '$25-50k', '$50-100k', '$100k+'];
 
@@ -52,8 +55,8 @@ function getNotion() {
 
 function setCorsHeaders(req, res) {
   const origin = req.headers.origin || '';
-  if (origin === ALLOWED_ORIGIN) {
-    res.set('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.set('Access-Control-Allow-Origin', origin);
   }
   res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.set('Access-Control-Allow-Headers', 'Content-Type');
