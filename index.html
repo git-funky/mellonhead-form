@@ -10,18 +10,18 @@
   <style>
     /* ── Colour tokens ───────────────────────────────────────── */
     :root {
-      --primary:   #f46665;   /* page background */
-      --dark:      #1e3a5f;   /* card background, dark text */
-      --light:     #fdf5e6;   /* card text, input background */
-      --accent:    #ffc512;   /* button, focus ring */
-      --accent-hover: #e6b010;
+      --primary:      #f46665;  /* buttons */
+      --primary-hover:#e05555;
+      --dark:         #1e3a5f;  /* card background, dark text */
+      --light:        #fdf5e6;  /* page background, card text, input background */
+      --accent:       #ffc512;  /* focus rings, success messages */
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'PT Sans', sans-serif;
-      background: var(--primary);
+      background: var(--light);
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -129,8 +129,8 @@
     .submit-btn {
       width: 100%;
       padding: 0.75rem;
-      background: var(--accent);
-      color: var(--dark);
+      background: var(--primary);
+      color: var(--light);
       border: none;
       border-radius: 6px;
       font-family: 'Nunito', sans-serif;
@@ -141,8 +141,8 @@
       margin-top: 0.5rem;
     }
 
-    .submit-btn:hover { background: var(--accent-hover); }
-    .submit-btn:disabled { background: rgba(255, 197, 18, 0.4); cursor: not-allowed; }
+    .submit-btn:hover { background: var(--primary-hover); }
+    .submit-btn:disabled { background: rgba(244, 102, 101, 0.4); cursor: not-allowed; }
 
     .alert {
       display: none;

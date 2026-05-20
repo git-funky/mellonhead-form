@@ -6,10 +6,10 @@
 
 | Token       | Hex       | Usage                                  |
 |-------------|-----------|----------------------------------------|
-| Primary     | `#f46665` | Page background                        |
+| Primary     | `#f46665` | Buttons                                |
 | Dark        | `#1e3a5f` | Card background, dark text             |
-| Light       | `#fdf5e6` | Card text, input background            |
-| Accent      | `#ffc512` | Buttons, focus rings, success messages |
+| Light       | `#fdf5e6` | Page background, card text, input background |
+| Accent      | `#ffc512` | Focus rings, success messages          |
 
 ### Typography
 
@@ -18,11 +18,11 @@
 
 ### General Rules
 
-- Page background always uses Primary (`#f46665`)
+- Page background uses Light (`#fdf5e6`)
 - Form card uses Dark (`#1e3a5f`) background with Light (`#fdf5e6`) text
 - Input fields use Light background with Dark text
-- Interactive elements (buttons, focus states) use Accent (`#ffc512`)
-- Button text uses Dark (`#1e3a5f`) for contrast against the Accent background
+- Buttons use Primary (`#f46665`) with Light (`#fdf5e6`) text
+- Focus rings use Accent (`#ffc512`)
 - Error states use soft red (`#f87171` / `#fca5a5`) that reads well on the dark card
 
 ---
