@@ -206,15 +206,192 @@
 
     .alert.visible { display: block; }
 
-    .logo-wrap {
+    /* ── Hero card ───────────────────────────────────────────── */
+    .hero-card {
+      background: var(--dark);
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      padding: 2rem 2rem 1.75rem;
+      width: 100%;
+      max-width: 560px;
+      margin-bottom: 1rem;
       text-align: center;
-      margin-bottom: 1.5rem;
     }
 
-    .logo-wrap img {
+    .hero-card .logo-wrap {
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-card .logo-wrap img {
       max-width: 200px;
       width: 100%;
       height: auto;
+    }
+
+    .hero-card p {
+      color: var(--light);
+      font-size: 0.975rem;
+      line-height: 1.6;
+      margin-bottom: 0.875rem;
+    }
+
+    /* ── Headline utility — use on any dark card ─────────────── */
+    .headline {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--light);
+    }
+
+    /* ── Content card ─────────────────────────────────────────── */
+    .content-card {
+      background: var(--dark);
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      padding: 2rem;
+      width: 100%;
+      max-width: 560px;
+      margin-bottom: 1rem;
+    }
+
+    .content-card h3 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .content-card p {
+      color: rgba(253, 245, 230, 0.82);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+
+    .content-card p:first-of-type {
+      margin-top: 0.5rem;
+    }
+
+    .content-card strong {
+      color: var(--light);
+      font-weight: 700;
+    }
+
+    .content-card em {
+      color: rgba(253, 245, 230, 0.6);
+      font-style: italic;
+    }
+
+    .content-card blockquote {
+      border-left: 3px solid var(--primary);
+      margin: 0.75rem 0;
+      padding: 0.25rem 0 0.25rem 1rem;
+      color: rgba(253, 245, 230, 0.82);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .content-card blockquote p {
+      margin-bottom: 0;
+    }
+
+    .content-card .attribution {
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+      color: rgba(253, 245, 230, 0.65);
+    }
+
+    .content-card .attribution strong {
+      display: block;
+      color: var(--light);
+      font-size: 0.9rem;
+    }
+
+    .content-body.collapsed {
+      max-height: 14rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-fade {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 5rem;
+      background: linear-gradient(to bottom, transparent, #1e3a5f);
+      pointer-events: none;
+    }
+
+    .content-body:not(.collapsed) .card-fade {
+      display: none;
+    }
+
+    .show-more-btn {
+      display: block;
+      text-align: center;
+      margin-top: 0.6rem;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .show-more-btn:hover {
+      color: var(--primary-hover);
+    }
+
+    .hero-card p + p {
+      color: rgba(253, 245, 230, 0.75);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-ctas button {
+      flex: 1 1 auto;
+      min-width: 160px;
+      padding: 0.65rem 1.1rem;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .hero-ctas .btn-primary {
+      background: var(--primary);
+      color: var(--light);
+    }
+
+    .hero-ctas .btn-primary:hover { background: var(--primary-hover); }
+
+    .hero-ctas .btn-outline {
+      background: transparent;
+      color: var(--light);
+      border: 2px solid rgba(253, 245, 230, 0.45);
+    }
+
+    .hero-ctas .btn-outline:hover {
+      border-color: var(--light);
     }
 
     .field-divider {
@@ -226,9 +403,111 @@
 </head>
 <body>
   <div>
-    <div class="logo-wrap">
-      <img src="images/mellonhead-logo-coral.png" alt="Mellonhead" />
+    <div class="hero-card">
+      <div class="logo-wrap">
+        <img src="images/mellonhead-logo-coral.png" alt="Mellonhead" />
+      </div>
+      <p class="headline">Will your AI training change how work gets done?</p>
+      <p >We help organizations turn AI investment into team-level capability through cohort programs and customized curriculum.</p>
+      <p>For L&amp;D and IT leaders ready to move beyond broad AI training<br>into adoption that sticks.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" id="heroBookCall">Book a call</button>
+        <button class="btn-outline" id="heroGetCatalog">Get the catalog + occasional updates</button>
+      </div>
     </div>
+    <div class="content-card">
+    <div class="content-body collapsed" id="contentBody">
+
+      <h2 class="headline">Mellonhead Labs</h2>
+      <p>Three Labs, each built for a specific audience and outcome.</p>
+
+      <h3>Leaders Lab (3 sessions)</h3>
+      <p>For executives and senior leaders. Develop calibrated judgment about what today's AI can really do and where it falls short. Learn a repeatable framework for finding and prioritizing AI opportunities, applied first to your own function then across the business. Walk out with a real decision you're ready to act on, with a change-leadership lens to navigate it.</p>
+
+      <h3>People Managers Lab (5 sessions)</h3>
+      <p>For managers shaping how their teams work. Find AI opportunities in your team's workflows, then decide whether you're optimizing what already exists or redesigning how the work gets done. Define readiness criteria for safe rollout, and lead your team through the change.</p>
+
+      <h3>Builders Labs (topic-based)</h3>
+      <p>For team members building with AI. Focused short Labs that go deep on one skill at a time: building Copilot agents, building internal tools with AI, evaluating AI outputs, applying design thinking to AI work, and more. Each Lab ends with a working artifact participants built themselves.</p>
+
+      <h3>How a Lab works</h3>
+      <p>Training alone doesn't build AI capability. People build it by working on their actual problems, with someone to help when they get stuck.</p>
+      <p>Every Lab is built around three things:</p>
+      <p><strong>Real work, not exercises.</strong> Participants work on actual projects sitting in their queue. The artifact at the end of a Lab is something they'll use Monday morning.</p>
+      <p><strong>Paired coaching, not lectures.</strong> Each participant gets 1:1 advisory time alongside the cohort sessions. That's where the messy questions get answered and the work actually gets shaped.</p>
+      <p><strong>Async feedback between sessions.</strong> Participants apply what they learn to real work between sessions, bring it back for feedback, and refine. The skill builds with the work, not separately from it.</p>
+      <p>It's "do it with us." Deep enough to shift how the work gets done, light enough that your team carries the capability forward after we're gone.</p>
+      <p>You walk away with a working agent, skill, or workflow. And the AI capability to build the next one.</p>
+
+      <hr class="field-divider" />
+
+      <h2 class="headline">AI Curriculum for Everyone</h2>
+      <p>Foundational AI training customized to your industry, policies, and AI tools. Two tracks:</p>
+      <p><strong>Foundations.</strong> Core courses include AI fundamentals, a Microsoft 365 Copilot course (five apps, 2–3 useful tasks per app), and a customized AI policy course built to your organization's guidelines (the "AI @ Your Org" course). An optional Judgment add-on includes two scenario-based courses: AI Ethics and Maintaining Trust.</p>
+      <p><strong>Skills.</strong> Seven blended-learning courses on the AI skills that come up across roles: communicating with AI, brainstorming, extracting data, summarizing, working with data, building presentations, and creating documentation. Each pairs a short self-paced intro with a 90-minute hands-on practice session.</p>
+
+      <hr class="field-divider" />
+
+      <p><em>These two work well together. Curriculum builds the baseline literacy. A Lab goes deep where it matters most.</em></p>
+
+      <div class="card-fade"></div>
+    </div>
+    <button class="show-more-btn" id="showMoreBtn">Show more</button>
+    </div>
+
+    <div class="content-card">
+    <div class="content-body collapsed" id="contentBody2">
+
+      <h2 class="headline">What an engagement looks like</h2>
+      <p>Engagements typically run 3 to 6 months and combine one or more offers. Cadence varies: weekly when teams need fast skill-building, monthly when leaders need integration time between sessions. Every Lab includes 1:1 advisory and async feedback in addition to live cohort time.</p>
+
+      <h3>Sample engagement shapes</h3>
+
+      <p><strong>Leadership readiness for a small executive team.</strong> The Leaders Lab over 3 months, one session per month. 8 to 12 executives. Each leader walks out with a real decision they're acting on by the end of the program, and a change-leadership framework for the next one.</p>
+
+      <p><strong>Manager-led rollout for a 200-person organization.</strong> Foundations curriculum is customized with your policies and industry context over 4 to 6 weeks, then rolls out across all teams to build baseline AI literacy. A People Managers Lab runs in parallel, taking the managers through the 5-session arc over two months. Each manager walks out with a defined workflow change they're piloting with their team.</p>
+
+      <p><strong>Builders cohort building Copilot agents.</strong> Two in-person half-day sessions in one week: requirements first, then buildout. A virtual launch-planning session follows four weeks later, drawing on test results and limitations identified between sessions. Weekly office hours and async check-ins support builders throughout. Up to 24 participants. Each launches an agent they built and tested themselves.</p>
+
+      <div class="card-fade"></div>
+    </div>
+    <button class="show-more-btn" id="showMoreBtn2">Show more</button>
+    </div>
+
+    <div class="content-card">
+    <div class="content-body collapsed" id="contentBody3">
+      <h2 class="headline">What it costs</h2>
+      <p>Engagements start at $25,000 for a focused Lab. A combined Labs and Curriculum rollout for a mid-size organization typically runs $150,000 to $300,000 depending on audience size and scope.</p>
+      <p>If you're under that range, sign up for the catalog. We'd love to stay in touch.</p>
+      <div class="card-fade"></div>
+    </div>
+    <button class="show-more-btn" id="showMoreBtn3">Show more</button>
+    </div>
+
+    <div class="content-card">
+    <div class="content-body collapsed" id="contentBody4">
+      <h2 class="headline">Testimonial</h2>
+      <blockquote>
+        <p>"Mellonhead's support of our AI adoption strategy through workshops and building out specific use cases has helped demystify Copilot and ChatGPT and give our team practical confidence in using AI effectively. Mariena's emphasis on real-world workflows makes adoption feel natural and manageable."</p>
+      </blockquote>
+      <p class="attribution">
+        <strong>Andy McDonald</strong>
+        CFO &amp; HumanGood Foundation President
+      </p>
+      <div class="card-fade"></div>
+    </div>
+    <button class="show-more-btn" id="showMoreBtn4">Show more</button>
+    </div>
+
+    <div class="content-card">
+    <div class="content-body collapsed" id="contentBody5">
+      <h2 class="headline">About Mariena</h2>
+      <p>Mariena Quintanilla is the founder and CEO of Mellonhead. A Carnegie Mellon CS grad with 15+ years in AI as an engineer, people manager, and technical consultant, she founded Mellonhead to widen access to AI education for the people who actually use these tools at work. To date, Mellonhead has trained more than 10,000 people.</p>
+      <div class="card-fade"></div>
+    </div>
+    <button class="show-more-btn" id="showMoreBtn5">Show more</button>
+    </div>
+
     <div class="form-card">
       <h1>Let's talk</h1>
       <p class="subtitle">Tell us a bit about your situation. Based on what you share, we'll either book a fit call or send you the Lab catalog to keep in your back pocket.</p>
@@ -351,6 +630,49 @@
 
   <script>
     const FUNCTION_URL = 'https://us-central1-co-mellonhead.cloudfunctions.net/contactForm';
+
+    // Content card show more / show less
+    const contentBody = document.getElementById('contentBody');
+    const showMoreBtn = document.getElementById('showMoreBtn');
+
+    showMoreBtn.addEventListener('click', () => {
+      const collapsed = contentBody.classList.toggle('collapsed');
+      showMoreBtn.textContent = collapsed ? 'Show more' : 'Show less';
+    });
+
+    const contentBody2 = document.getElementById('contentBody2');
+    const showMoreBtn2 = document.getElementById('showMoreBtn2');
+
+    showMoreBtn2.addEventListener('click', () => {
+      const collapsed = contentBody2.classList.toggle('collapsed');
+      showMoreBtn2.textContent = collapsed ? 'Show more' : 'Show less';
+    });
+
+    [
+      ['contentBody3', 'showMoreBtn3'],
+      ['contentBody4', 'showMoreBtn4'],
+      ['contentBody5', 'showMoreBtn5'],
+    ].forEach(([bodyId, btnId]) => {
+      const body = document.getElementById(bodyId);
+      const btn  = document.getElementById(btnId);
+      btn.addEventListener('click', () => {
+        const collapsed = body.classList.toggle('collapsed');
+        btn.textContent = collapsed ? 'Show more' : 'Show less';
+      });
+    });
+
+    // Hero CTA buttons — set formPath and scroll to form
+    document.getElementById('heroBookCall').addEventListener('click', () => {
+      document.getElementById('formPath').value = 'booking-request';
+      document.getElementById('submitBtn').textContent = 'Book a call';
+      document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('heroGetCatalog').addEventListener('click', () => {
+      document.getElementById('formPath').value = 'catalog-request';
+      document.getElementById('submitBtn').textContent = 'Send Message';
+      document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 
     const form = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
