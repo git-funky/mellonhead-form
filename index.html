@@ -399,6 +399,51 @@
       border-top: 1px solid rgba(253, 245, 230, 0.15);
       margin: 1.5rem 0;
     }
+
+    /* ── Success cards ───────────────────────────────────────── */
+    .success-card {
+      display: none;
+      text-align: center;
+    }
+
+    .success-logo {
+      margin-bottom: 1.5rem;
+    }
+
+    .success-logo img {
+      max-width: 180px;
+      width: 100%;
+      height: auto;
+    }
+
+    .success-card .headline {
+      margin-bottom: 0.75rem;
+    }
+
+    .success-body {
+      color: rgba(253, 245, 230, 0.8);
+      font-size: 0.975rem;
+      line-height: 1.6;
+    }
+
+    /* ── Sticky CTA card ─────────────────────────────────────── */
+    .sticky-cta {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 2rem);
+      max-width: 560px;
+      background: var(--dark);
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      padding: 1rem 1.25rem;
+      z-index: 100;
+      transition: opacity 0.25s ease;
+    }
+
+    /* Extra bottom padding so the form card isn't hidden under the sticky bar */
+    body { padding-bottom: 6rem; }
   </style>
 </head>
 <body>
@@ -410,10 +455,6 @@
       <p class="headline">Will your AI training change how work gets done?</p>
       <p >We help organizations turn AI investment into team-level capability through cohort programs and customized curriculum.</p>
       <p>For L&amp;D and IT leaders ready to move beyond broad AI training<br>into adoption that sticks.</p>
-      <div class="hero-ctas">
-        <button class="btn-primary" id="heroBookCall">Book a call</button>
-        <button class="btn-outline" id="heroGetCatalog">Get the catalog + occasional updates</button>
-      </div>
     </div>
     <div class="content-card">
     <div class="content-body collapsed" id="contentBody">
@@ -511,6 +552,11 @@
     <div class="form-card">
       <h1>Let's talk</h1>
       <p class="subtitle">Tell us a bit about your situation. Based on what you share, we'll either book a fit call or send you the Lab catalog to keep in your back pocket.</p>
+      <p style="margin-bottom:1rem;">
+        <span style="font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;background:rgba(255,197,18,0.2);color:var(--accent);border:1px solid rgba(255,197,18,0.4);border-radius:4px;padding:0.2rem 0.5rem;">
+          formPath: <span id="formPathBadge">catalog-request</span>
+        </span>
+      </p>
 
       <form id="contactForm" novalidate>
 
@@ -618,13 +664,37 @@
 
         <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
 
-        <div class="alert success" id="successMsg" role="alert">
-          Thanks for reaching out! We'll be in touch soon.
-        </div>
         <div class="alert failure" id="errorMsg" role="alert">
           Something went wrong. Please try again in a moment.
         </div>
       </form>
+    </div>
+
+    <!-- ── Calendly success card ──────────────────────────────── -->
+    <div class="form-card success-card" id="successCalendlyCard">
+      <div class="success-logo">
+        <img src="images/mellonhead-logo-coral.png" alt="Mellonhead" />
+      </div>
+      <p class="headline">Great, <span id="calendlyName"></span>!</p>
+      <p class="success-body">We've received your info. Book a time below and we'll come prepared.</p>
+      <a id="calendlyLink" href="#" class="submit-btn" style="display:block;text-decoration:none;text-align:center;margin-top:1.5rem;" target="_blank" rel="noopener">Book your call →</a>
+    </div>
+
+    <!-- ── Catalog success card ───────────────────────────────── -->
+    <div class="form-card success-card" id="successCatalogCard">
+      <div class="success-logo">
+        <img src="images/mellonhead-logo-coral.png" alt="Mellonhead" />
+      </div>
+      <p class="success-body">Check your inbox for the confirmation link.</p>
+    </div>
+
+  </div>
+
+  <!-- Sticky CTA card — fixed at bottom, fades when form is near -->
+  <div id="stickyCta" class="sticky-cta">
+    <div class="hero-ctas">
+      <button class="btn-primary" id="heroBookCall">Book a call</button>
+      <button class="btn-outline" id="heroGetCatalog">Get the catalog + occasional updates</button>
     </div>
   </div>
 
@@ -661,23 +731,45 @@
       });
     });
 
-    // Hero CTA buttons — set formPath and scroll to form
-    document.getElementById('heroBookCall').addEventListener('click', () => {
-      document.getElementById('formPath').value = 'booking-request';
-      document.getElementById('submitBtn').textContent = 'Book a call';
-      document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    // Sticky CTA fade — disappears as the form card approaches
+    const stickyCta  = document.getElementById('stickyCta');
+    const formCardEl = document.querySelector('.form-card');
 
-    document.getElementById('heroGetCatalog').addEventListener('click', () => {
-      document.getElementById('formPath').value = 'catalog-request';
-      document.getElementById('submitBtn').textContent = 'Send Message';
+    function updateStickyOpacity() {
+      const formTop    = formCardEl.getBoundingClientRect().top;
+      const stickyH    = stickyCta.offsetHeight;
+      const stickyTop  = window.innerHeight - stickyH - 20; // 20px = bottom offset
+      const gap        = formTop - stickyTop; // px between form top and sticky card top
+      const fadeRange  = 180; // px over which to fade
+      const opacity    = Math.min(1, Math.max(0, gap / fadeRange));
+      stickyCta.style.opacity = opacity;
+      stickyCta.style.pointerEvents = opacity < 0.05 ? 'none' : '';
+    }
+
+    window.addEventListener('scroll', updateStickyOpacity, { passive: true });
+    updateStickyOpacity(); // run once on load
+
+    // Hero CTA buttons — set formPath and scroll to form
+    function setFormPath(value, btnLabel) {
+      document.getElementById('formPath').value = value;
+      document.getElementById('formPathBadge').textContent = value;
+      document.getElementById('submitBtn').textContent = btnLabel;
       document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    }
+
+    document.getElementById('heroBookCall').addEventListener('click', () => setFormPath('booking-request', 'Book a call'));
+    document.getElementById('heroGetCatalog').addEventListener('click', () => setFormPath('catalog-request', 'Send Message'));
 
     const form = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
-    const successMsg = document.getElementById('successMsg');
+    const successCalendlyCard = document.getElementById('successCalendlyCard');
+    const successCatalogCard  = document.getElementById('successCatalogCard');
     const errorMsg = document.getElementById('errorMsg');
+
+    function resolveSuccessScreen(formPath, budget) {
+      if (formPath === 'booking-request' && budget !== 'Under $25k') return 'calendly';
+      return 'catalog';
+    }
 
     const VALID_BUDGETS = ['Under $25k', '$25-50k', '$50-100k', '$100k+'];
     const VALID_TIMELINES = ['Now or next quarter', '3-6 months', '6-12 months', 'Later or exploring', 'Unclear'];
@@ -745,7 +837,6 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      successMsg.classList.remove('visible');
       errorMsg.classList.remove('visible');
 
       if (!validate()) return;
@@ -758,38 +849,4 @@
         email:        document.getElementById('email').value.trim(),
         organization: document.getElementById('organization').value.trim(),
         role:         document.getElementById('role').value.trim(),
-        budget:       document.getElementById('budget').value,
-        goals:        getCheckedValues('goals'),
-        tools:        getCheckedValues('tools'),
-        timeline:     document.getElementById('timeline').value,
-        context:      document.getElementById('context').value.trim(),
-        source:       document.getElementById('source').value,
-        formPath:     document.getElementById('formPath').value,
-        _honeypot:    document.getElementById('_hp').value,
-      };
-
-      try {
-        const res = await fetch(FUNCTION_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          form.reset();
-          successMsg.classList.add('visible');
-        } else {
-          errorMsg.classList.add('visible');
-        }
-      } catch {
-        errorMsg.classList.add('visible');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-      }
-    });
-  </script>
-</body>
-</html>
+        budget:
