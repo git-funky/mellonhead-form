@@ -849,4 +849,56 @@
         email:        document.getElementById('email').value.trim(),
         organization: document.getElementById('organization').value.trim(),
         role:         document.getElementById('role').value.trim(),
-        budget:
+        budget:       document.getElementById('budget').value,
+        goals:        getCheckedValues('goals'),
+        tools:        getCheckedValues('tools'),
+        timeline:     document.getElementById('timeline').value,
+        context:      document.getElementById('context').value.trim(),
+        source:       document.getElementById('source').value,
+        formPath:     document.getElementById('formPath').value,
+        _honeypot:    document.getElementById('_hp').value,
+      };
+
+      try {
+        const res = await fetch(FUNCTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          const screen = resolveSuccessScreen(payload.formPath, payload.budget);
+          form.reset();
+
+          // Swap form card for the appropriate success card
+          formCardEl.style.display = 'none';
+          stickyCta.style.display  = 'none';
+
+          if (screen === 'calendly') {
+            const name  = encodeURIComponent(payload.name);
+            const email = encodeURIComponent(payload.email);
+            document.getElementById('calendlyName').textContent = payload.name;
+            document.getElementById('calendlyLink').href =
+              `https://calendly.com/mariena/ai-consultation?back=1&month=2026-05&name=${name}&email=${email}`;
+            successCalendlyCard.style.display = 'block';
+            successCalendlyCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            successCatalogCard.style.display = 'block';
+            successCatalogCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          errorMsg.classList.add('visible');
+          submitBtn.disabled = false;
+          submitBtn.textContent = payload.formPath === 'booking-request' ? 'Book a call' : 'Send Message';
+        }
+      } catch {
+        errorMsg.classList.add('visible');
+        submitBtn.disabled = false;
+        submitBtn.textContent = document.getElementById('formPath').value === 'booking-request' ? 'Book a call' : 'Send Message';
+      }
+    });
+  </script>
+</body>
+</html>
