@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us</title>
+  <title>Mellonhead — Book a Call or Get the Catalog</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
@@ -38,7 +38,7 @@
       max-width: 560px;
     }
 
-    h1 {
+    h1, .form-card h2 {
       font-family: 'Nunito', sans-serif;
       font-size: 1.6rem;
       font-weight: 700;
@@ -67,7 +67,7 @@
 
     label .optional {
       font-weight: 400;
-      color: rgba(253, 245, 230, 0.55);
+      color: rgba(253, 245, 230, 0.65); /* bumped from 0.55 → 0.65 for 4.5:1 AA */
       font-size: 0.8rem;
       margin-left: 4px;
     }
@@ -114,6 +114,33 @@
     .error-msg.visible {
       display: block;
     }
+
+    /* ── Fieldset reset (used for checkbox groups) ──────────── */
+    fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    fieldset legend {
+      display: block;
+      float: left;   /* prevents default legend gap */
+      width: 100%;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--light);
+      margin-bottom: 0.375rem;
+    }
+
+    fieldset legend .optional {
+      font-weight: 400;
+      color: rgba(253, 245, 230, 0.65);
+      font-size: 0.8rem;
+      margin-left: 4px;
+    }
+
+    fieldset legend + * { clear: left; }
 
     /* ── Multi-select checkboxes ─────────────────────────────── */
     .multi-select-group {
@@ -182,6 +209,7 @@
     }
 
     .submit-btn:hover { background: var(--primary-hover); }
+    .submit-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
     .submit-btn:disabled { background: rgba(244, 102, 101, 0.4); cursor: not-allowed; }
 
     .alert {
@@ -338,7 +366,7 @@
       font-family: 'Nunito', sans-serif;
       font-size: 0.875rem;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--accent); /* changed from primary (3.8:1) → accent (7.3:1) for AA */
       background: none;
       border: none;
       cursor: pointer;
@@ -347,9 +375,8 @@
       text-underline-offset: 3px;
     }
 
-    .show-more-btn:hover {
-      color: var(--primary-hover);
-    }
+    .show-more-btn:hover { opacity: 0.8; }
+    .show-more-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
     .hero-card p + p {
       color: rgba(253, 245, 230, 0.75);
@@ -383,6 +410,7 @@
     }
 
     .hero-ctas .btn-primary:hover { background: var(--primary-hover); }
+    .hero-ctas .btn-primary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
     .hero-ctas .btn-outline {
       background: transparent;
@@ -390,9 +418,8 @@
       border: 2px solid rgba(253, 245, 230, 0.45);
     }
 
-    .hero-ctas .btn-outline:hover {
-      border-color: var(--light);
-    }
+    .hero-ctas .btn-outline:hover { border-color: var(--light); }
+    .hero-ctas .btn-outline:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
     .field-divider {
       border: none;
@@ -447,12 +474,12 @@
   </style>
 </head>
 <body>
-  <div>
+  <main>
     <div class="hero-card">
       <div class="logo-wrap">
         <img src="images/mellonhead-logo-coral.png" alt="Mellonhead" />
       </div>
-      <p class="headline">Will your AI training change how work gets done?</p>
+      <h1 class="headline">Will your AI training change how work gets done?</h1>
       <p >We help organizations turn AI investment into team-level capability through cohort programs and customized curriculum.</p>
       <p>For L&amp;D and IT leaders ready to move beyond broad AI training<br>into adoption that sticks.</p>
     </div>
@@ -480,20 +507,20 @@
       <p>It's "do it with us." Deep enough to shift how the work gets done, light enough that your team carries the capability forward after we're gone.</p>
       <p>You walk away with a working agent, skill, or workflow. And the AI capability to build the next one.</p>
 
-      <hr class="field-divider" />
+      <hr class="field-divider" aria-hidden="true" />
 
       <h2 class="headline">AI Curriculum for Everyone</h2>
       <p>Foundational AI training customized to your industry, policies, and AI tools. Two tracks:</p>
       <p><strong>Foundations.</strong> Core courses include AI fundamentals, a Microsoft 365 Copilot course (five apps, 2–3 useful tasks per app), and a customized AI policy course built to your organization's guidelines (the "AI @ Your Org" course). An optional Judgment add-on includes two scenario-based courses: AI Ethics and Maintaining Trust.</p>
       <p><strong>Skills.</strong> Seven blended-learning courses on the AI skills that come up across roles: communicating with AI, brainstorming, extracting data, summarizing, working with data, building presentations, and creating documentation. Each pairs a short self-paced intro with a 90-minute hands-on practice session.</p>
 
-      <hr class="field-divider" />
+      <hr class="field-divider" aria-hidden="true" />
 
       <p><em>These two work well together. Curriculum builds the baseline literacy. A Lab goes deep where it matters most.</em></p>
 
       <div class="card-fade"></div>
     </div>
-    <button class="show-more-btn" id="showMoreBtn">Show more</button>
+    <button class="show-more-btn" id="showMoreBtn" aria-expanded="false" aria-controls="contentBody">Show more</button>
     </div>
 
     <div class="content-card">
@@ -512,7 +539,7 @@
 
       <div class="card-fade"></div>
     </div>
-    <button class="show-more-btn" id="showMoreBtn2">Show more</button>
+    <button class="show-more-btn" id="showMoreBtn2" aria-expanded="false" aria-controls="contentBody2">Show more</button>
     </div>
 
     <div class="content-card">
@@ -522,7 +549,7 @@
       <p>If you're under that range, sign up for the catalog. We'd love to stay in touch.</p>
       <div class="card-fade"></div>
     </div>
-    <button class="show-more-btn" id="showMoreBtn3">Show more</button>
+    <button class="show-more-btn" id="showMoreBtn3" aria-expanded="false" aria-controls="contentBody3">Show more</button>
     </div>
 
     <div class="content-card">
@@ -537,7 +564,7 @@
       </p>
       <div class="card-fade"></div>
     </div>
-    <button class="show-more-btn" id="showMoreBtn4">Show more</button>
+    <button class="show-more-btn" id="showMoreBtn4" aria-expanded="false" aria-controls="contentBody4">Show more</button>
     </div>
 
     <div class="content-card">
@@ -546,11 +573,11 @@
       <p>Mariena Quintanilla is the founder and CEO of Mellonhead. A Carnegie Mellon CS grad with 15+ years in AI as an engineer, people manager, and technical consultant, she founded Mellonhead to widen access to AI education for the people who actually use these tools at work. To date, Mellonhead has trained more than 10,000 people.</p>
       <div class="card-fade"></div>
     </div>
-    <button class="show-more-btn" id="showMoreBtn5">Show more</button>
+    <button class="show-more-btn" id="showMoreBtn5" aria-expanded="false" aria-controls="contentBody5">Show more</button>
     </div>
 
     <div class="form-card">
-      <h1>Let's talk</h1>
+      <h2>Let's talk</h2>
       <p class="subtitle">Tell us a bit about your situation. Based on what you share, we'll either book a fit call or send you the Lab catalog to keep in your back pocket.</p>
       <p style="margin-bottom:1rem;">
         <span style="font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;background:rgba(255,197,18,0.2);color:var(--accent);border:1px solid rgba(255,197,18,0.4);border-radius:4px;padding:0.2rem 0.5rem;">
@@ -573,35 +600,35 @@
         <!-- 1. Full name -->
         <div class="field">
           <label for="name">Full name</label>
-          <input type="text" id="name" name="name" maxlength="100" autocomplete="name" />
+          <input type="text" id="name" name="name" maxlength="100" autocomplete="name" aria-required="true" aria-describedby="name-error" />
           <span class="error-msg" id="name-error">Please enter your name.</span>
         </div>
 
         <!-- 2. Work email -->
         <div class="field">
           <label for="email">Work email</label>
-          <input type="email" id="email" name="email" autocomplete="email" />
+          <input type="email" id="email" name="email" autocomplete="email" aria-required="true" aria-describedby="email-error" />
           <span class="error-msg" id="email-error">Please enter a valid email address.</span>
         </div>
 
         <!-- 3. Organization -->
         <div class="field">
           <label for="organization">Organization</label>
-          <input type="text" id="organization" name="organization" maxlength="200" autocomplete="organization" />
+          <input type="text" id="organization" name="organization" maxlength="200" autocomplete="organization" aria-required="true" aria-describedby="organization-error" />
           <span class="error-msg" id="organization-error">Please enter your organization.</span>
         </div>
 
         <!-- 4. Role / title -->
         <div class="field">
           <label for="role">Role / title</label>
-          <input type="text" id="role" name="role" maxlength="100" autocomplete="organization-title" />
+          <input type="text" id="role" name="role" maxlength="100" autocomplete="organization-title" aria-required="true" aria-describedby="role-error" />
           <span class="error-msg" id="role-error">Please enter your role or title.</span>
         </div>
 
         <!-- 5. Budget -->
         <div class="field">
           <label for="budget">Approximate budget for AI capability work</label>
-          <select id="budget" name="budget">
+          <select id="budget" name="budget" aria-required="true" aria-describedby="budget-error">
             <option value="">Select a range...</option>
             <option value="Under $25k">Under $25k</option>
             <option value="$25-50k">$25&ndash;50k</option>
@@ -611,11 +638,11 @@
           <span class="error-msg" id="budget-error">Please select a budget range.</span>
         </div>
 
-        <hr class="field-divider" />
+        <hr class="field-divider" aria-hidden="true" />
 
         <!-- 6. Primary goals (multi-select) -->
-        <div class="field">
-          <label>What are you trying to do? <span class="optional">(optional — select all that apply)</span></label>
+        <fieldset class="field">
+          <legend>What are you trying to do? <span class="optional">(optional — select all that apply)</span></legend>
           <div class="multi-select-group" id="goals-group">
             <label><input type="checkbox" name="goals" value="Get leadership conversant in AI" /> Get leadership conversant in AI</label>
             <label><input type="checkbox" name="goals" value="Help managers lead AI adoption in their teams" /> Help managers lead AI adoption in their teams</label>
@@ -625,11 +652,11 @@
             <label><input type="checkbox" name="goals" value="Figure out where to start" /> Figure out where to start</label>
             <label><input type="checkbox" name="goals" value="Something else" /> Something else</label>
           </div>
-        </div>
+        </fieldset>
 
         <!-- 7. AI tools (multi-select) -->
-        <div class="field">
-          <label>What AI tools are in use today? <span class="optional">(optional — select all that apply)</span></label>
+        <fieldset class="field">
+          <legend>What AI tools are in use today? <span class="optional">(optional — select all that apply)</span></legend>
           <div class="multi-select-group" id="tools-group">
             <label><input type="checkbox" name="tools" value="Microsoft 365 Copilot" /> Microsoft 365 Copilot</label>
             <label><input type="checkbox" name="tools" value="Google Gemini or Workspace AI" /> Google Gemini or Workspace AI</label>
@@ -638,7 +665,7 @@
             <label><input type="checkbox" name="tools" value="Other" /> Other</label>
             <label><input type="checkbox" name="tools" value="Not yet deployed or evaluating" /> Not yet deployed or evaluating</label>
           </div>
-        </div>
+        </fieldset>
 
         <!-- 8. Timeline -->
         <div class="field">
@@ -653,7 +680,7 @@
           </select>
         </div>
 
-        <hr class="field-divider" />
+        <hr class="field-divider" aria-hidden="true" />
 
         <!-- 9. Specific context -->
         <div class="field">
@@ -688,7 +715,7 @@
       <p class="success-body">Check your inbox for the confirmation link.</p>
     </div>
 
-  </div>
+  </main>
 
   <!-- Sticky CTA card — fixed at bottom, fades when form is near -->
   <div id="stickyCta" class="sticky-cta">
@@ -705,18 +732,17 @@
     const contentBody = document.getElementById('contentBody');
     const showMoreBtn = document.getElementById('showMoreBtn');
 
-    showMoreBtn.addEventListener('click', () => {
-      const collapsed = contentBody.classList.toggle('collapsed');
-      showMoreBtn.textContent = collapsed ? 'Show more' : 'Show less';
-    });
+    function toggleSection(body, btn) {
+      const collapsed = body.classList.toggle('collapsed');
+      btn.textContent = collapsed ? 'Show more' : 'Show less';
+      btn.setAttribute('aria-expanded', String(!collapsed));
+    }
+
+    showMoreBtn.addEventListener('click', () => toggleSection(contentBody, showMoreBtn));
 
     const contentBody2 = document.getElementById('contentBody2');
     const showMoreBtn2 = document.getElementById('showMoreBtn2');
-
-    showMoreBtn2.addEventListener('click', () => {
-      const collapsed = contentBody2.classList.toggle('collapsed');
-      showMoreBtn2.textContent = collapsed ? 'Show more' : 'Show less';
-    });
+    showMoreBtn2.addEventListener('click', () => toggleSection(contentBody2, showMoreBtn2));
 
     [
       ['contentBody3', 'showMoreBtn3'],
@@ -725,10 +751,7 @@
     ].forEach(([bodyId, btnId]) => {
       const body = document.getElementById(bodyId);
       const btn  = document.getElementById(btnId);
-      btn.addEventListener('click', () => {
-        const collapsed = body.classList.toggle('collapsed');
-        btn.textContent = collapsed ? 'Show more' : 'Show less';
-      });
+      btn.addEventListener('click', () => toggleSection(body, btn));
     });
 
     // Sticky CTA fade — disappears as the form card approaches
@@ -799,8 +822,8 @@
       const input = document.getElementById(fieldId);
       const err = document.getElementById(fieldId + '-error');
       if (input) {
-        if (show) input.classList.add('error');
-        else input.classList.remove('error');
+        if (show) { input.classList.add('error'); input.setAttribute('aria-invalid', 'true'); }
+        else { input.classList.remove('error'); input.removeAttribute('aria-invalid'); }
       }
       if (err) {
         if (show) err.classList.add('visible');
